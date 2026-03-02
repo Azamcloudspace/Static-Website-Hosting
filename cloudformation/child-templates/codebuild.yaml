@@ -50,23 +50,25 @@ Resources:
   CodeBuildProject:
     Type: AWS::CodeBuild::Project
     Properties:
-      Name: !Sub "${AWS::StackName}-StaticWebsiteBuild"
-      ServiceRole: !Ref CodeBuildRole
-      Source:
-        Type: CODEPIPELINE
-        BuildSpec: ci/buildspec.yml
+      Name: !Sub "${EnvironmentName}-S3ServerlessWebApp"
+      ServiceRole: !Ref CodebuildRole
       Artifacts:
         Type: CODEPIPELINE
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
-        Image: aws/codebuild/standard:6.0
+        Image: aws/codebuild/standard:7.0
         Type: LINUX_CONTAINER
-
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: ci/buildspec.yml
+      TimeoutInMinutes: 10
       Tags:
         - Key: Environment
           Value: !Ref EnvironmentName
 
+
 Outputs:
   CodeBuildProjectName:
     Value: !Ref CodeBuildProject
+
 
