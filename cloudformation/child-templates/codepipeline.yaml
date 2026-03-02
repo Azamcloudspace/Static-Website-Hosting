@@ -27,12 +27,12 @@ Resources:
   ArtifactStoreBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub "${EnvironmentName}-codepipeline-artifacts"
+      BucketName: !Sub "${EnvironmentName}-pipeline-artifacts"
 
   CodePipelineRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub "${EnvironmentName}-${AWS::Region}-codepipeline-role"
+      RoleName: !Sub "${EnvironmentName}-${AWS::Region}-pipeline-role"
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -133,6 +133,7 @@ Resources:
 Outputs:
   PipelineName:
     Value: !Ref Pipeline
+
 
 
 
