@@ -21,11 +21,10 @@ Resources:
       AliasTarget:
         DNSName: !Ref CloudFrontDomainName
         HostedZoneId: Z2FDTNDATAQYW2
-      Tags:
-        - Key: Environment
-          Value: !Ref EnvironmentName
+
 
 Outputs:
   DNSRecordName:
     Value: !Ref DomainName
+
 
