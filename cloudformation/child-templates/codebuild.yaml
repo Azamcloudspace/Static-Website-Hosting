@@ -1,0 +1,70 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  EnvironmentName:
+    Type: String
+  BucketName:
+    Type: String
+Resources:
+
+  CodebuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${EnvironmentName}-codebuild-role"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codebuild.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: CodeBuildBasePolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "*"
+
+              - Effect: Allow
+                Action:
+                  - cloudfront:CreateInvalidation
+                Resource: "*"
+
+              - Effect: Allow
+                Action:
+                  - s3:ListBucket
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:GetObjectVersion
+                Resource:
+                  - !Sub "arn:aws:s3:::${BucketName}"
+                  - !Sub "arn:aws:s3:::${BucketName}/*"
+
+
+  CodeBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Sub "${AWS::StackName}-StaticWebsiteBuild"
+      ServiceRole: !Ref CodeBuildRole
+      Source:
+        Type: CODEPIPELINE
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:6.0
+        Type: LINUX_CONTAINER
+
+      Tags:
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+Outputs:
+  CodeBuildProjectName:
+    Value: !Ref CodeBuildProject

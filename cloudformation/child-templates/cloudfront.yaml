@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  EnvironmentName:
+    Type: String
+  DomainName:
+    Type: String
+  CertificateArn:
+    Type: String
+  S3BucketDomainName:
+    Type: String
+
+Resources:
+
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
+        Origins:
+          - DomainName: !Ref S3BucketDomainName
+            Id: S3Origin
+            S3OriginConfig: {}
+        DefaultCacheBehavior:
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD]
+          CachedMethods: [GET, HEAD]
+          ForwardedValues:
+            QueryString: false
+        ViewerCertificate:
+          AcmCertificateArn: !Ref CertificateArn
+          SslSupportMethod: sni-only
+        Aliases:
+          - !Ref DomainName
+        Tags:
+          - Key: Environment
+            Value: !Ref EnvironmentName
+Outputs:
+  CloudFrontDistributionId:
+    Value: !Ref CloudFrontDistribution
+  CloudFrontDomainName:
+    Value: !GetAtt CloudFrontDistribution.DomainName
+
+

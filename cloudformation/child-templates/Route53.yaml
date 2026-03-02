@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  EnvironmentName:
+    Type: String
+  DomainName:
+    Type: String
+  HostedZoneId:
+    Type: String
+  CloudFrontDomainName:
+    Type: String
+
+Resources:
+
+  WebsiteDNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: !Ref DomainName
+      Type: A
+      AliasTarget:
+        DNSName: !Ref CloudFrontDomainName
+        HostedZoneId: Z2FDTNDATAQYW2
+      Tags:
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+Outputs:
+  DNSRecordName:
+    Value: !Ref DomainName
+

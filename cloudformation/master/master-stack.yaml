@@ -1,0 +1,65 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+
+  EnvironmentName:
+    Type: String
+  DomainName:
+    Type: String
+  CertificateArn:
+    Type: String
+  HostedZoneId:
+    Type: String
+  GitHubOwner:
+    Type: String
+  GitHubRepo:
+    Type: String
+  CodeStarConnectionArn:
+    Type: String
+
+Resources:
+  S3Stack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/WebBucket.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+
+  CloudFrontStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/cloudfront.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        DomainName: !Ref DomainName
+        CertificateArn: !Ref CertificateArn
+        S3BucketDomainName: !GetAtt S3Stack.Outputs.S3BucketDomainName
+
+  Route53Stack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/Route53.yaml
+      Parameters:
+        DomainName: !Ref DomainName
+        HostedZoneId: !Ref HostedZoneId
+        CloudFrontDomainName: !GetAtt CloudFrontStack.Outputs.CloudFrontDomainName
+  
+  CodeBuildStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/codebuild.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        BucketName: !Ref S3Stack.Outputs.S3BucketName
+
+  CodePipelineStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/codepipeline.yaml
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        GitHubOwner: !Ref GitHubOwner
+        GitHubRepo: !Ref GitHubRepo
+        CodeStarConnectionArn: !Ref CodeStarConnectionArn
+        CodeBuildProjectName: !GetAtt CodeBuildStack.Outputs.CodeBuildProjectName
+        

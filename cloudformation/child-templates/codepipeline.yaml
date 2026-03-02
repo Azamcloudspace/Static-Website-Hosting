@@ -1,0 +1,137 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+
+  EnvironmentName:
+    Type: String
+
+  GitHubOwner:
+    Type: String
+
+  GitHubRepo:
+    Type: String
+
+  GitHubBranch:
+    Type: String
+    Default: main
+
+  CodeStarConnectionArn:
+    Type: String
+
+  CodeBuildProjectName:
+    Type: String
+  
+
+Resources:
+
+  ArtifactStoreBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${EnvironmentName}-codepipeline-artifacts"
+
+  CodePipelineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${EnvironmentName}-${AWS::Region}-codepipeline-role"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codepipeline.amazonaws.com
+            Action: sts:AssumeRole
+
+      Policies:
+        - PolicyName: CodePipelinePolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:PutObject
+                  - s3:ListBucket
+                Resource:
+                  - !Sub "arn:aws:s3:::${ArtifactStoreBucket}"
+                  - !Sub "arn:aws:s3:::${ArtifactStoreBucket}/*"
+
+              - Effect: Allow
+                Action:
+                  - codestar-connections:UseConnection
+                Resource: !Ref CodeStarConnectionArn
+
+              - Effect: Allow
+                Action:
+                  - iam:PassRole
+                Resource: "*"
+
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "*"
+
+              - Effect: Allow
+                Action:
+                  - codebuild:StartBuild
+                  - codebuild:BatchGetBuilds
+                  - codebuild:StopBuild
+                Resource: "*"
+
+  Pipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      RoleArn: !Ref CodePipelineRole
+      ArtifactStore:
+        Type: S3
+        Location: !Ref ArtifactStoreBucket
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: GitHubSource
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Provider: GitHub
+                Version: "1"
+              Configuration:
+                ConnectionArn: !Ref CodeStarConnectionArn
+                FullRepositoryId: !Sub "${GitHubOwner}/${GitHubRepo}"
+                BranchName: !Ref GitHubBranch
+                DetectChanges: false
+              OutputArtifacts:
+                - Name: SourceOutput
+
+        - Name: Approval
+          Actions:
+            - Name: ManualApproval
+              ActionTypeId:
+                Category: Approval
+                Owner: AWS
+                Provider: Manual
+                Version: '1'
+
+        - Name: Build
+          Actions:
+            - Name: CodeBuild
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Provider: CodeBuild
+                Version: "1"
+              InputArtifacts:
+                - Name: SourceOutput
+              Configuration:
+                ProjectName: !Ref CodeBuildProjectName
+
+    Tags:
+      - Key: Environment
+        Value: !Ref EnvironmentName
+
+Outputs:
+  PipelineName:
+    Value: !Ref Pipeline
+
+

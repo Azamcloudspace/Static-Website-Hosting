@@ -1,0 +1,19 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      - echo "Starting build process..."
+  build:
+    commands:
+      - echo "Uploading files to S3..."
+      - aws s3 sync app/ s3://dev-S3BucketSite/
+      - echo "Invalidating CloudFront cache..."
+      - aws cloudfront create-invalidation --distribution-id E1UT2E4RKDJXJ4 --paths "/*"
+
+artifacts:
+  files:
+    - '**/*'
+

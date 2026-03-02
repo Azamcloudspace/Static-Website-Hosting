@@ -1,0 +1,40 @@
+[
+  {
+    "ParameterKey": "EnvironmentName",
+    "ParameterValue": "dev"
+  },
+  {
+    "ParameterKey": "DomainName",
+    "ParameterValue": "azamcloudspace.click"
+  },
+  {
+    "ParameterKey": "CertificateArn",
+    "ParameterValue": "arn:aws:acm:us-east-1:975050225555:certificate/c5f2d67d-cb73-4d07-8e77-66793638852c"
+  },
+  {
+    "ParameterKey": "GitHubOwner",
+    "ParameterValue": "Azamcloudspace"
+  },
+  {
+    "ParameterKey": "GitHubRepo",
+    "ParameterValue": "Serverless-Web-Hosting-App"
+  },
+  {
+    "ParameterKey": "CodeStarConnectionArn",
+    "ParameterValue": "arn:aws:codeconnections:us-east-1:975050225555:connection/b764abe8-bf03-4f0f-bfd5-d00aaa612924"
+  },
+  {
+    "ParameterKey": "HostedZoneId",
+    "ParameterValue": "Z0040497NT0F8RUQMJK"
+  }
+]
+
+
+
+
+
+
+
+
+
+
