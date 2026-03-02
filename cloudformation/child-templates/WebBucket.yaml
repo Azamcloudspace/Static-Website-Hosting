@@ -9,7 +9,7 @@ Resources:
   WebsiteBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub "${EnvironmentName}-S3BucketSite"
+      BucketName: !Sub "${EnvironmentName}-s3bucketsite"
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: index.html
@@ -44,5 +44,6 @@ Outputs:
     Value: !GetAtt WebsiteBucket.Arn
   S3BucketDomainName:
     Value: !GetAtt WebsiteBucket.DomainName
+
 
 
