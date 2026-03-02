@@ -34,13 +34,14 @@ Resources:
           SslSupportMethod: sni-only
         Aliases:
           - !Ref DomainName
-        Tags:
-          - Key: Environment
-            Value: !Ref EnvironmentName
+      Tags:
+        - Key: Environment
+          Value: !Ref EnvironmentName
 Outputs:
   CloudFrontDistributionId:
     Value: !Ref CloudFrontDistribution
   CloudFrontDomainName:
     Value: !GetAtt CloudFrontDistribution.DomainName
+
 
 
