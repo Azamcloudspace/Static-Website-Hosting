@@ -21,7 +21,8 @@ Parameters:
   CodeBuildProjectName:
     Type: String
   
-
+  CodeBuildArn:
+    Type: String
 Resources:
 
   ArtifactStoreBucket:
@@ -78,7 +79,7 @@ Resources:
                   - codebuild:StartBuild
                   - codebuild:BatchGetBuilds
                   - codebuild:StopBuild
-                Resource: "*"
+                Resource: !Sub arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/${CodeBuildProjectName}
 
   Pipeline:
     Type: AWS::CodePipeline::Pipeline
