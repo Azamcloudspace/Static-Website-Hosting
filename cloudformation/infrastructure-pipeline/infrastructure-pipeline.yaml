@@ -64,52 +64,6 @@ Resources:
                   - cloudformation:DescribeStackEvents
                 Resource: "*"
 
-
-  CodePipelineRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: Infrastructure-codepipeline-role
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: codepipeline.amazonaws.com
-            Action: sts:AssumeRole
-      Policies:
-        - PolicyName: CodePipelinePolicy
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - s3:GetObject
-                  - s3:GetObjectVersion
-                  - s3:PutObject
-                  - s3:ListBucket
-                Resource:
-                  - !Sub "arn:aws:s3:::${ArtifactStoreBucket}"
-                  - !Sub "arn:aws:s3:::${ArtifactStoreBucket}/*"
-
-              - Effect: Allow
-                Action:
-                  - codestar-connections:UseConnection
-                Resource: !Ref CodestarConnectionArn
-
-              - Effect: Allow
-                Action:
-                  - logs:CreateLogGroup
-                  - logs:CreateLogStream
-                  - logs:PutLogEvents
-                Resource: "*"
-
-              - Effect: Allow
-                Action:
-                  - codebuild:StartBuild
-                  - codebuild:BatchGetBuilds
-                  - codebuild:StopBuild
-                Resource: "*"
-
   DevBuildProject:
     Type: AWS::CodeBuild::Project
     Properties:
@@ -158,6 +112,53 @@ Resources:
         BuildSpec: ci/prod-buildspec.yml
       TimeoutInMinutes: 10
 
+  CodePipelineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: Infrastructure-codepipeline-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codepipeline.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: CodePipelinePolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:PutObject
+                  - s3:ListBucket
+                Resource:
+                  - !Sub "arn:aws:s3:::${ArtifactStoreBucket}"
+                  - !Sub "arn:aws:s3:::${ArtifactStoreBucket}/*"
+
+              - Effect: Allow
+                Action:
+                  - codestar-connections:UseConnection
+                Resource: !Ref CodestarConnectionArn
+
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "*"
+
+              - Effect: Allow
+                Action:
+                  - codebuild:StartBuild
+                  - codebuild:BatchGetBuilds
+                  - codebuild:StopBuild
+                Resource: 
+                  - !GetAtt DevBuildProject.Arn
+                  - !GetAtt StagingBuildProject.Arn
+                  - !GetAtt ProdBuildProject.Arn
 
   Pipeline:
     Type: AWS::CodePipeline::Pipeline
