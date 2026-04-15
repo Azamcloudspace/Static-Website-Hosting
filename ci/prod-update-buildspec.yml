@@ -14,7 +14,7 @@ phases:
   build:
     commands:
       - echo "Uploading files to S3..."
-      - aws s3 sync app/ s3://prod-s3bucketsite/
+      - aws s3 sync app/ s3://prod-s3-bucketsite/
       - echo "Invalidating CloudFront cache..."
       - aws cloudfront create-invalidation --distribution-id $DIST_ID --paths "/*"
 
