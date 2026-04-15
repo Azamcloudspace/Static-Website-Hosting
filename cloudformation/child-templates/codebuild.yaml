@@ -34,7 +34,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - cloudfront:CreateInvalidation
-                Resource: "arn:aws:cloudfront::${AWS::AccountId}:distribution/*"
+                Resource: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/*"
 
               - Effect: Allow
                 Action:
