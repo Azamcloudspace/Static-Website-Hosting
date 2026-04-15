@@ -1,0 +1,21 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.11
+
+
+  pre_build:
+    commands:
+      - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+
+  build:
+    commands:
+      - echo Packaging templates...
+      - aws s3 sync cloudformation/child-templates/ s3://iac-bucket-azamclouds/
+      - aws cloudformation deploy --template-file cloudformation/master/master-stack.yaml --stack-name Dev-ServerlessWebApp --capabilities CAPABILITY_NAMED_IAM --role-arn arn:aws:iam::$ACCOUNT_ID:role/cloudformationrole --parameter-overrides file://cloudformation/params/dev.json
+
+artifacts:
+  files:
+    - '**/*'
