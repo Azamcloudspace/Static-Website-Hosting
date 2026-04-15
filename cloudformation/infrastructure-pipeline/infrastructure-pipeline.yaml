@@ -12,7 +12,7 @@ Parameters:
     Type: String
     Default: main
 
-  CodestarConnectionArn:
+  CodeStarConnectionArn:
     Type: String
 
 Resources:
@@ -143,7 +143,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - codestar-connections:UseConnection
-                Resource: !Ref CodestarConnectionArn
+                Resource: !Ref CodeStarConnectionArn
 
               - Effect: Allow
                 Action:
@@ -182,7 +182,7 @@ Resources:
                 Provider: CodeStarSourceConnection
                 Version: "1"
               Configuration:
-                ConnectionArn: !Ref CodestarConnectionArn
+                ConnectionArn: !Ref CodeStarConnectionArn
                 FullRepositoryId: !Sub "${GitHubOwner}/${GitHubRepo}"
                 BranchName: !Ref GitHubBranch
                 DetectChanges: false
