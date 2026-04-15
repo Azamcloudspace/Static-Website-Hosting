@@ -42,6 +42,8 @@ Outputs:
     Value: !Ref CloudFrontDistribution
   CloudFrontDomainName:
     Value: !GetAtt CloudFrontDistribution.DomainName
+    Export:
+      Name: !Sub "${EnvironmentName}-CloudFront-DistributionId"
 
 
 
