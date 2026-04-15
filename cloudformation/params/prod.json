@@ -9,7 +9,7 @@
   },
   {
     "ParameterKey": "CertificateArn",
-    "ParameterValue": "arn:aws:acm:eu-central-1:760773573647:certificate/70ce18a6-5847-4089-b88d-3de95443bf8f"
+    "ParameterValue": "arn:aws:acm:us-east-1:760773573647:certificate/84d5eb2c-bcf6-4958-bbd1-4438b8c00ce4"
   },
   {
     "ParameterKey": "GitHubOwner",
