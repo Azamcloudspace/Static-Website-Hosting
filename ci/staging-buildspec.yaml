@@ -12,7 +12,7 @@ phases:
   build:
     commands:
       - echo Packaging templates...
-      - aws s3 sync cloudformation/child-templates/ s3://iac-bucket-azamcloud/
+      - aws s3 sync cloudformation/child-templates/ s3://iac-bucket-azamclouds/
       - aws cloudformation deploy --template-file cloudformation/master/master-stack.yaml --stack-name Staging-ServerlessWebApp --capabilities CAPABILITY_NAMED_IAM --role-arn arn:aws:iam::$ACCOUNT_ID:role/cloudformationrole --parameter-overrides file://cloudformation/params/staging.json
 
 artifacts:
