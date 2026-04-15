@@ -45,8 +45,8 @@ Resources:
                 Resource:
                   - !Sub "arn:aws:s3:::${BucketName}"
                   - !Sub "arn:aws:s3:::${BucketName}/*"
-                  - !Sub "arn:aws:s3:::${EnvironmentName}-s3bucketpipeline-artifacts"
-                  - !Sub "arn:aws:s3:::${EnvironmentName}-s3bucketpipeline-artifacts/*"
+                  - !Sub "arn:aws:s3:::${EnvironmentName}-s3bucketpipeline-artifactss"
+                  - !Sub "arn:aws:s3:::${EnvironmentName}-s3bucketpipeline-artifactss/*"
 
 
   CodeBuildProject:
