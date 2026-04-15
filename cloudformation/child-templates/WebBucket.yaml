@@ -9,7 +9,7 @@ Resources:
   WebsiteBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub "${EnvironmentName}-s3bucketsite"
+      BucketName: !Sub "${EnvironmentName}-s3-bucketsite"
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: index.html
