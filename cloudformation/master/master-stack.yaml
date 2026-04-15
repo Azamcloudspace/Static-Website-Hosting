@@ -66,7 +66,7 @@ Resources:
 
 Outputs:
   CloudfrontDistributionId:
-    Value: 
+    Value: !GetAtt CloudFrontStack.Outputs.CloudFrontDistributionId
 
         
 
