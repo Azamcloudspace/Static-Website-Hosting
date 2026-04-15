@@ -5,11 +5,11 @@
   },
   {
     "ParameterKey": "DomainName",
-    "ParameterValue": "azamcloudspace.click"
+    "ParameterValue": "azamcloud.click"
   },
   {
     "ParameterKey": "CertificateArn",
-    "ParameterValue": "arn:aws:acm:us-east-1:975050225555:certificate/c5f2d67d-cb73-4d07-8e77-66793638852c"
+    "ParameterValue": "arn:aws:acm:eu-central-1:760773573647:certificate/70ce18a6-5847-4089-b88d-3de95443bf8f"
   },
   {
     "ParameterKey": "GitHubOwner",
@@ -17,15 +17,15 @@
   },
   {
     "ParameterKey": "GitHubRepo",
-    "ParameterValue": "Serverless-Web-Hosting-App"
+    "ParameterValue": "Static-Website-Hosting"
   },
   {
     "ParameterKey": "CodeStarConnectionArn",
-    "ParameterValue": "arn:aws:codeconnections:us-east-1:975050225555:connection/b764abe8-bf03-4f0f-bfd5-d00aaa612924"
+    "ParameterValue": "arn:aws:codeconnections:eu-central-1:760773573647:connection/0e242b5e-22d9-4a97-8909-78ce7101355b"
   },
   {
     "ParameterKey": "HostedZoneId",
-    "ParameterValue": "Z0040497NT0F8RUQMJK"
+    "ParameterValue": "Z04857351NU0G97GGV2PN"
   }
 ]
 
