@@ -38,6 +38,14 @@ Resources:
 
               - Effect: Allow
                 Action:
+                  - cloudformation:DescribeStacks
+                Resource: 
+                  - !Sub "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/Dev-ServerlessWebApp/*"
+                  - !Sub "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/Staging-ServerlessWebApp/*"
+                  - !Sub "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/Prod-ServerlessWebApp/*"
+
+              - Effect: Allow
+                Action:
                   - s3:ListBucket
                   - s3:GetObject
                   - s3:PutObject
