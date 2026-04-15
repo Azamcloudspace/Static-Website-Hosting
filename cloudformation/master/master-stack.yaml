@@ -64,5 +64,9 @@ Resources:
         CodeStarConnectionArn: !Ref CodeStarConnectionArn
         CodeBuildProjectName: !GetAtt CodeBuildStack.Outputs.CodeBuildProjectName
 
+Outputs:
+  CloudfrontDistributionId:
+    Value: 
+
         
 
