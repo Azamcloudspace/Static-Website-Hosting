@@ -5,7 +5,7 @@
   },
   {
     "ParameterKey": "DomainName",
-    "ParameterValue": "dev.azamcloud.click"
+    "ParameterValue": "prod.azamcloud.click"
   },
   {
     "ParameterKey": "CertificateArn",
