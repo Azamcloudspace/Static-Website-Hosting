@@ -21,14 +21,14 @@ Resources:
   S3Stack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/WebBucket.yaml
+      TemplateURL: https://iac-bucket-azamclouds.s3.eu-central-1.amazonaws.com/WebBucket.yaml
       Parameters:
         EnvironmentName: !Ref EnvironmentName
 
   CloudFrontStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/cloudfront.yaml
+      TemplateURL: https://iac-bucket-azamclouds.s3.eu-central-1.amazonaws.com/cloudfront.yaml
       Parameters:
         EnvironmentName: !Ref EnvironmentName
         DomainName: !Ref DomainName
@@ -38,7 +38,7 @@ Resources:
   Route53Stack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/Route53.yaml
+      TemplateURL: https://iac-bucket-azamclouds.s3.eu-central-1.amazonaws.com/Route53.yaml
       Parameters:
         EnvironmentName: !Ref EnvironmentName
         DomainName: !Ref DomainName
@@ -48,7 +48,7 @@ Resources:
   CodeBuildStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/codebuild.yaml
+      TemplateURL: https://iac-bucket-azamclouds.s3.eu-central-1.amazonaws.com/codebuild.yaml
       Parameters:
         EnvironmentName: !Ref EnvironmentName
         BucketName: !GetAtt S3Stack.Outputs.S3BucketName
@@ -56,7 +56,7 @@ Resources:
   CodePipelineStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://iac-bucket-azamcloud.s3.us-east-1.amazonaws.com/codepipeline.yaml
+      TemplateURL: https://iac-bucket-azamclouds.s3.eu-central-1.amazonaws.com/codepipeline.yaml
       Parameters:
         EnvironmentName: !Ref EnvironmentName
         GitHubOwner: !Ref GitHubOwner
