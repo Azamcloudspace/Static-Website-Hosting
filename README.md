@@ -180,7 +180,7 @@ S3 bucket after pipeline trigger (prod environment)
 
 ##  Repository Structure
 
-
+```
 .
 ├── app/
 │ └── index.html
@@ -190,7 +190,7 @@ S3 bucket after pipeline trigger (prod environment)
 │ ├── infrastructure-pipeline/
 │ ├── master/
 │ └── params/
-
+```
 
 ---
 
