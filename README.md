@@ -1,5 +1,7 @@
 #  AWS Static Website Hosting with Multi-Environment CI/CD
 
+---
+
 ##  Project Summary
 
 Designed and implemented a fully automated, production-ready static website hosting solution on AWS using serverless services. The system leverages a multi-environment CI/CD architecture to separate infrastructure provisioning from application content deployment, ensuring scalable, repeatable, and controlled releases across development, staging, and production environments.
@@ -26,8 +28,6 @@ User → Route 53 → CloudFront → S3 (Static Website)
 
 ![Architecture](/screenshots/Architecture.jpeg)
 
----
-
 ##  System Design
 
 ### Content Hosting
@@ -35,21 +35,15 @@ User → Route 53 → CloudFront → S3 (Static Website)
   - Stores static website files (`index.html`, assets)  
   - Acts as origin for CloudFront  
 
----
-
 ### Content Delivery
 - **Amazon CloudFront**
   - Distributes content globally  
   - Provides HTTPS via ACM integration  
   - Caches content for performance  
 
----
-
 ### DNS Management
 - **Amazon Route 53**
   - Routes domain traffic to CloudFront distribution  
-
----
 
 ### Security
 - **AWS Certificate Manager (ACM)**
@@ -57,11 +51,49 @@ User → Route 53 → CloudFront → S3 (Static Website)
 
 ---
 
+## Infrastructure as Code (IaC) – AWS CloudFormation
+
+This project uses **AWS CloudFormation** with a **nested stack setup**. One main stack (master) controls multiple smaller stacks, each handling a specific service.
+
+### Stack Structure
+
+Deployment Order (Dependency-Based)
+
+```
+        S3Stack
+        /     \
+       ↓       ↓
+CloudFront   CodeBuild
+     ↓            ↓
+Route53     CodePipeline
+```
+
+### How the Stacks Connect
+
+Stacks are separated for organization
+They share data using:
+
+- **Parameters** – Pass values into a stack  
+- **Outputs** – Share values from a stack  
+
+### Design Idea
+
+Stacks are modular but not fully independent.  
+Some stacks require values (like ARNs, bucket names) from other stacks to function as designed.
+
+This is handled using **output → parameter passing**, keeping things structured and connected.
+
+### Result
+
+- Clean structure  
+- Easy to update  
+- Reusable across different environments  
+
+---
+
 ##  CI/CD Architecture 
 
 This project uses a **two-tier pipeline architecture**:
-
----
 
 ### 1. Infrastructure Pipeline
 
@@ -100,8 +132,6 @@ Mutiple Codebuild services are used for the different environments with their in
 ![Pipeline](/screenshots/Screenshot1.png)
 Infrastructure Pipeline
 
----
-
 ### 2. Application Pipelines
 
 Dedicated pipeline per environment for content deployment.
@@ -129,6 +159,28 @@ Mutiple Codebuild services are used for the different environments with their in
 ![Pipeline](/screenshots/Screenshot2.png)
 Application Pipeline (prod environment)
 
+### Detailed Flow
+
+```
+GitHub
+↓
+Infrastructure Pipeline
+↓
+CloudFormation (Master → Nested Stacks)
+↓
+Environment Infrastructure + App Pipelines Created
+↓
+Application Pipeline (per environment)
+↓
+CodeBuild 
+↓
+S3 sync files
+↓
+CloudFront Invalidation
+↓
+Live Website Update
+```
+
 ---
 
 ##  Deployment Lifecycle
@@ -145,8 +197,6 @@ Infrastructure Pipeline
 
 ![Deployment](/screenshots/Screenshot17.png)
 Cloudformation Deployment (prod environment)
-
----
 
 ### Continuous Delivery
 
@@ -213,8 +263,6 @@ S3 bucket after pipeline trigger (prod environment)
 
 - **Pipeline Monitoring**
   - CodePipeline execution status  
-
-
 
 ---
 
