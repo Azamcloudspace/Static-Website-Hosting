@@ -69,13 +69,33 @@ Responsible for provisioning environments and resources.
 
 **Workflow:**
 
-GitHub → CodePipeline → CodeBuild → CloudFormation → Environment Deployment
+CodePipeline → GitHub(source) → CodeBuild(Build) → CloudFormation → Environment Deployment
 
 **Capabilities:**
-- Deploys full infrastructure (S3, CloudFront, Route 53, pipelines)  
-- Supports multi-environment rollout (dev, staging, prod)  
-- Uses manual approval gates for controlled promotion  
-- Creates environment-specific application pipelines  
+
+**Codepipeline**
+
+- Integrates with services such as GitHub and CodeBuild
+- Automatically triggers and executes workflows
+- Uses manual approval gates to control promotion between stages
+- Implements properly structured IAM permissions across services
+
+**GitHub**
+
+- Repository (Source)
+
+**CodeBuild**
+
+Mutiple Codebuild services are used for the different environments with their individual builspec.yml i.e `dev-buidspec.yml`, `staging-buildspec.yml`, and
+`prod-buildspec.yml` respectively , their capabilities are :
+
+- Uploads all nested CloudFormation templates to an S3 bucket for stack referencing
+- Deploys the `cloudformation/master/master-stack.yaml` template
+- Implements properly structured IAM permissions across services
+
+**Cloudformation**
+
+- Provisions `cloudformation/master/master-stack.yaml` template child stacks resources 
 
 ![Pipeline](/screenshots/Screenshot1.png)
 Infrastructure Pipeline
@@ -88,11 +108,22 @@ Dedicated pipeline per environment for content deployment.
 
 **Workflow:**
 
-GitHub → CodeBuild → S3 Sync → CloudFront Invalidation
+GitHub(Source) → CodeBuild(Build) → S3 Sync → CloudFront Invalidation
 
 **Responsibilities:**
-- Sync static files from `app/` to S3  
-- Invalidate CloudFront cache  
+
+**GitHub**
+
+- Repository (Source)
+
+**CodeBuild(Build)**
+
+Mutiple Codebuild services are used for the different environments with their individual builspec.yml i.e `dev-update-buidspec.yml`, `staging-update-buildspec.yml`, and
+`prod-update-buildspec.yml` respectively , their capabilities are :
+
+- Retrieves the CloudFront distribution ID from CloudFormation stack output
+- Uploads/Sync static files from `app/` to S3  
+- Invalidate CloudFront cache using the retrieved distribution ID
 - Deploy content updates without infrastructure changes  
 
 ![Pipeline](/screenshots/Screenshot2.png)
@@ -114,6 +145,7 @@ Infrastructure Pipeline
 
 ![Deployment](/screenshots/Screenshot17.png)
 Cloudformation Deployment (prod environment)
+
 ---
 
 ### Continuous Delivery
@@ -148,7 +180,7 @@ S3 bucket after pipeline trigger (prod environment)
 
 ##  Repository Structure
 
-```
+
 .
 ├── app/
 │ └── index.html
@@ -158,7 +190,7 @@ S3 bucket after pipeline trigger (prod environment)
 │ ├── infrastructure-pipeline/
 │ ├── master/
 │ └── params/
-```
+
 
 ---
 
